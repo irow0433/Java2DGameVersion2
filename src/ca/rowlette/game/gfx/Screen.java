@@ -1,0 +1,51 @@
+package ca.rowlette.game.gfx;
+
+public class Screen {
+	
+	public static final int MAP_WIDTH = 64;
+	public static final int MAP_WIDTH_MASK = MAP_WIDTH - 1;
+	
+	//has info of what the colors are
+	//public int[] tiles = new int[MAP_WIDTH*MAP_WIDTH];
+	//public int[] colours = new int[MAP_WIDTH*MAP_WIDTH*4];
+	public int[]pixels;
+	
+	public int xOffset = 0;
+	public int yOffset = 0;
+	
+	public int width;
+	public int height;
+	 
+	public SpriteSheet sheet;
+	
+	public Screen(int width,int height, SpriteSheet sheet) {
+		this.width = width;
+		this.height = height;
+		this.sheet = sheet;
+		
+		pixels = new int[width*height];
+		
+
+	}
+
+public void render(int xPos, int yPos, int tile, int colour) {
+	xPos -=xOffset;
+	yPos -=yOffset;
+	
+	int xTile = xPos % 24; //32
+	int yTile = tile/24;
+	int tileOffset = (xTile << 3) + (yTile << 3) * sheet.width;
+	for(int y = 0; y <8; y++) {
+		int ySheet = y;
+		if(y + yPos <0 || y +yPos >= height)continue;
+		for(int x = 0; x <8; x++) {
+			if(x + xPos <0 || x +xPos >= height)continue;
+			int xSheet = x;
+			int col = (colour>>(sheet.pixels[xSheet + ySheet * sheet.width + tileOffset] * 8))& 255;
+			if(col<255) pixels[(x+xPos) + (y+yPos) * width] = col;
+		}
+
+}
+}
+}
+
